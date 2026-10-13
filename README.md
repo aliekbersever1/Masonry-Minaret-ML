@@ -1,4 +1,4 @@
-# R1C6 — mechanically scaled geometry-only baseline (Approach B)
+mechanically scaled geometry-only baseline (Approach B)
 
 This is the **sqrt(E/rho)-only** normalization. It does **not** use `H**2` scaling, beam-model ratios, or hyperparameter selection. It implements Reviewer 1, Comment 6 of *Data-Driven Approaches for Predicting the Natural Frequencies of Masonry Minarets*.
 
@@ -54,6 +54,20 @@ Dependencies: `numpy`, `scikit-learn`, and `matplotlib` (available through the p
 | f2 | 0.8217 ± 0.0286 | 0.1523 ± 0.0170 | 0.2137 ± 0.0210 | 24.45 ± 6.10 |
 
 The within-geometry median normalized-frequency CV is 0.000786% (f1) and 0.000785% (f2). The highest within-group CV is 0.07921% (f1) and 0.05111% (f2).
+
+
+## Symbolic regression
+
+The symbolic-regression analysis is implemented in [`regression_formulas_group_cv.py`](regression_formulas_group_cv.py). It uses PySR with binary operators `+`, `-`, `*`, `/`, unary operators `sqrt`, `log`, 500 iterations, 12 populations, `maxsize=15`, `maxdepth=6`, `parsimony=1e-4`, and `model_selection="best"`.
+
+A new PySR expression search is performed independently inside each **outer-training fold** of five-fold geometry-grouped CV. Both expression structure and constants are determined from training groups only; held-out geometries are not used in expression selection. A final equation is fitted to all realizations **after** CV solely for reporting an explicit full-data formula. PySR parameters are fixed across outer folds; **no separate inner CV** is used for tuning the symbolic-regression search settings.
+
+**Units:** For symbolic regression, the current code uses `sqrt_E_div_rho = sqrt(E_MPa/rho_kgm3)`. This is different from the mechanically scaled baseline (R1C6), which converts E to Pa. The equation coefficients must be interpreted with their own model's stated convention.
+
+See [`SYMBOLIC_REGRESSION_PROTOCOL.md`](SYMBOLIC_REGRESSION_PROTOCOL.md) for the complete operator/constraint list, training/test separation, seeds, execution command, outputs, and version-recording requirements.
+
+**Fixed manuscript version:** [add release URL or immutable Git commit URL only after checking published results].
+
 
 **Important:** The figures use **pooled out-of-fold R²** (f1=0.8222065; f2=0.8217953), whereas the manuscript comparison table should use **mean ± SD of fold-specific R²**, matching the previous ML and regression tables. These are different summary estimands and should be labeled explicitly.
 
