@@ -75,3 +75,7 @@ To allow readers to reproduce the search, record the actual runtime used to gene
 - Operating system and CPU/thread settings if known.
 
 > **Release identifier:** Add a GitHub release/tag or immutable commit hash link here **only after** the result verification and final commit are complete. Do not invent software versions or assume that a later environment reproduced the original search.
+
+**Software Environment**
+
+Python 3.13.9, PySR 1.5.9, and Julia 1.11.9. The Python package dependencies are documented in `environment_versions.txt`.
